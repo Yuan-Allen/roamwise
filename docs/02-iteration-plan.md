@@ -62,7 +62,7 @@ feat/source-access-spike
 Recommended first thin slice:
 
 1. Parse one Chinese trip request into a `TravelRequest`. Done for JSON input.
-2. Generate 10-20 candidate destinations. Started with explicit candidate input.
+2. Generate 10-20 candidate destinations. Started with a local city seed generator.
 3. Fetch weather for all candidates. Done with Open-Meteo.
 4. Fetch China route estimates for a subset through Amap. Done for geocode, driving, and transit route adapters.
 5. Fetch one inspiration source for the top 3.

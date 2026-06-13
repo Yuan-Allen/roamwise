@@ -11,6 +11,7 @@ from rich.console import Console
 
 from roamwise.adapters.maps import AmapClient, AmapError, MissingAmapApiKeyError
 from roamwise.adapters.weather import OpenMeteoWeatherClient
+from roamwise.core.candidates import ensure_candidates
 from roamwise.core.models import GeoPoint, RecommendationResult, RouteMode, RoutePlan, TravelRequest
 from roamwise.core.ranking import score_destination_options, score_weather_forecasts
 from roamwise.core.reports import (
@@ -106,6 +107,11 @@ def recommend_destination(
 
 async def _recommend_weather(request_path: Path) -> RecommendationResult:
     request = _load_request(request_path)
+    if not request.candidates:
+        raise typer.BadParameter(
+            "weather recommendation requires explicit candidates",
+            param_hint="candidates",
+        )
     client = OpenMeteoWeatherClient()
     forecasts = [
         await client.fetch_forecast(candidate, request.date_range)
@@ -116,7 +122,7 @@ async def _recommend_weather(request_path: Path) -> RecommendationResult:
 
 
 async def _recommend_destination(request_path: Path) -> RecommendationResult:
-    request = _load_request(request_path)
+    request = ensure_candidates(_load_request(request_path))
     weather_client = OpenMeteoWeatherClient()
     amap_client = AmapClient()
     origin = await amap_client.geocode(request.origin)

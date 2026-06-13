@@ -48,6 +48,13 @@ uv run roamwise recommend destination examples/requests/no_drive.json \
 
 This command combines Open-Meteo weather data with Amap transit route feasibility for a no-self-drive request.
 
+Run the same flow with generated candidate destinations:
+
+```bash
+uv run roamwise recommend destination examples/requests/auto_candidates_no_drive.json \
+  --output artifacts/auto-candidates-no-drive.md
+```
+
 Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
 
 ```bash

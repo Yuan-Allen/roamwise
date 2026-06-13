@@ -118,19 +118,10 @@ class RankingProfile(BaseModel):
 class TravelRequest(BaseModel):
     origin: str
     date_range: DateRange
-    candidates: list[DestinationCandidate]
+    candidates: list[DestinationCandidate] = Field(default_factory=list)
     ranking_profile: RankingProfile = Field(default_factory=RankingProfile)
     locale: str = "zh-CN"
     notes: str | None = None
-
-    @field_validator("candidates")
-    @classmethod
-    def require_candidates(
-        cls, candidates: list[DestinationCandidate]
-    ) -> list[DestinationCandidate]:
-        if not candidates:
-            raise ValueError("at least one destination candidate is required")
-        return candidates
 
 
 class Evidence(BaseModel):
