@@ -84,18 +84,12 @@ class WeatherPolicy(BaseModel):
 
 class RankingWeights(BaseModel):
     weather: float = Field(default=1.0, ge=0)
+    transport: float = Field(default=0.0, ge=0)
     evidence_quality: float = Field(default=0.2, ge=0)
 
     @property
     def total(self) -> float:
-        return self.weather + self.evidence_quality
-
-
-class RankingProfile(BaseModel):
-    name: str = "default"
-    hard_filters: list[str] = Field(default_factory=list)
-    weather_policy: WeatherPolicy = Field(default_factory=WeatherPolicy)
-    weights: RankingWeights = Field(default_factory=RankingWeights)
+        return self.weather + self.transport + self.evidence_quality
 
 
 class RouteMode(StrEnum):
@@ -111,6 +105,14 @@ class TransportPolicy(BaseModel):
     max_total_travel_minutes: int | None = Field(default=None, ge=0)
     max_transfer_count: int | None = Field(default=None, ge=0)
     max_walking_distance_meters: int | None = Field(default=None, ge=0)
+
+
+class RankingProfile(BaseModel):
+    name: str = "default"
+    hard_filters: list[str] = Field(default_factory=list)
+    weather_policy: WeatherPolicy = Field(default_factory=WeatherPolicy)
+    transport_policy: TransportPolicy = Field(default_factory=TransportPolicy)
+    weights: RankingWeights = Field(default_factory=RankingWeights)
 
 
 class TravelRequest(BaseModel):
@@ -192,10 +194,12 @@ class DestinationScore(BaseModel):
     candidate: DestinationCandidate
     hard_filter: HardFilterResult
     weather_score: float = Field(ge=0, le=100)
+    transport_score: float = Field(default=0, ge=0, le=100)
     evidence_quality_score: float = Field(ge=0, le=100)
     total_score: float = Field(ge=0, le=100)
     explanation: str
     evidence: list[Evidence] = Field(default_factory=list)
+    route_plans: list[RoutePlan] = Field(default_factory=list)
 
 
 class RecommendationResult(BaseModel):

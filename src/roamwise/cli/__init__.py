@@ -11,9 +11,12 @@ from rich.console import Console
 
 from roamwise.adapters.maps import AmapClient, AmapError, MissingAmapApiKeyError
 from roamwise.adapters.weather import OpenMeteoWeatherClient
-from roamwise.core.models import GeoPoint, RecommendationResult, TravelRequest
-from roamwise.core.ranking import score_weather_forecasts
-from roamwise.core.reports import recommendation_to_markdown
+from roamwise.core.models import GeoPoint, RecommendationResult, RouteMode, RoutePlan, TravelRequest
+from roamwise.core.ranking import score_destination_options, score_weather_forecasts
+from roamwise.core.reports import (
+    destination_recommendation_to_markdown,
+    recommendation_to_markdown,
+)
 
 app = typer.Typer(help="Roamwise travel research commands.")
 recommend_app = typer.Typer(help="Generate recommendation reports.")
@@ -60,6 +63,47 @@ def recommend_weather(
         console.print(rendered)
 
 
+@recommend_app.command("destination")
+def recommend_destination(
+    request_path: Annotated[
+        Path,
+        typer.Argument(
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="Path to a TravelRequest JSON file.",
+        ),
+    ],
+    output: Annotated[
+        Path | None,
+        typer.Option("--output", "-o", help="Optional path for the rendered report."),
+    ] = None,
+    json_output: Annotated[
+        bool,
+        typer.Option("--json", help="Emit structured JSON instead of Markdown."),
+    ] = False,
+) -> None:
+    """Rank destinations by weather and Amap route feasibility."""
+
+    try:
+        result = asyncio.run(_recommend_destination(request_path))
+    except MissingAmapApiKeyError as exc:
+        raise typer.BadParameter(str(exc), param_hint="AMAP_API_KEY") from exc
+
+    if json_output:
+        rendered = result.model_dump_json(indent=2)
+    else:
+        rendered = destination_recommendation_to_markdown(result)
+
+    if output:
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered, encoding="utf-8")
+        console.print(f"Wrote {output}")
+    else:
+        console.print(rendered)
+
+
 async def _recommend_weather(request_path: Path) -> RecommendationResult:
     request = _load_request(request_path)
     client = OpenMeteoWeatherClient()
@@ -69,6 +113,67 @@ async def _recommend_weather(request_path: Path) -> RecommendationResult:
     ]
     scores = score_weather_forecasts(forecasts, request.ranking_profile)
     return RecommendationResult(request=request, scores=scores)
+
+
+async def _recommend_destination(request_path: Path) -> RecommendationResult:
+    request = _load_request(request_path)
+    weather_client = OpenMeteoWeatherClient()
+    amap_client = AmapClient()
+    origin = await amap_client.geocode(request.origin)
+
+    forecasts = []
+    route_plans_by_candidate: dict[str, list[RoutePlan]] = {}
+    for candidate in request.candidates:
+        forecasts.append(await weather_client.fetch_forecast(candidate, request.date_range))
+        destination = GeoPoint(
+            longitude=candidate.longitude,
+            latitude=candidate.latitude,
+            label=candidate.name,
+        )
+        route_plans_by_candidate[candidate.name] = await _collect_amap_routes(
+            amap_client,
+            origin,
+            destination,
+            request.origin,
+            candidate.name,
+            request.ranking_profile.transport_policy.preferred_modes,
+        )
+
+    scores = score_destination_options(
+        forecasts,
+        route_plans_by_candidate,
+        request.ranking_profile,
+    )
+    return RecommendationResult(request=request, scores=scores)
+
+
+async def _collect_amap_routes(
+    amap_client: AmapClient,
+    origin: GeoPoint,
+    destination: GeoPoint,
+    origin_city: str,
+    destination_city: str,
+    preferred_modes: list[RouteMode],
+) -> list[RoutePlan]:
+    routes: list[RoutePlan] = []
+    if RouteMode.TRANSIT in preferred_modes:
+        try:
+            routes.append(
+                await amap_client.route_transit(
+                    origin,
+                    destination,
+                    city=origin_city,
+                    destination_city=destination_city,
+                )
+            )
+        except AmapError:
+            pass
+    if RouteMode.DRIVING in preferred_modes:
+        try:
+            routes.append(await amap_client.route_driving(origin, destination))
+        except AmapError:
+            pass
+    return routes
 
 
 def _load_request(path: Path) -> TravelRequest:

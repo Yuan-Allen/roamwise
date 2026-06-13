@@ -64,10 +64,10 @@ Recommended first thin slice:
 1. Parse one Chinese trip request into a `TravelRequest`. Done for JSON input.
 2. Generate 10-20 candidate destinations. Started with explicit candidate input.
 3. Fetch weather for all candidates. Done with Open-Meteo.
-4. Fetch China route estimates for a subset through Amap. Adapter started for geocode, driving, and transit routes.
+4. Fetch China route estimates for a subset through Amap. Done for geocode, driving, and transit route adapters.
 5. Fetch one inspiration source for the top 3.
 6. Score with a dynamic ranking profile. Done for weather hard filters and weights.
-7. Produce a sourced markdown report. Done for weather-only recommendations.
+7. Produce a sourced markdown report. Done for weather-only and weather-plus-transit recommendations.
 
 ## Phase 3: Destination Ranking Prototype
 

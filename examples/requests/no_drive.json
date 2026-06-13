@@ -1,0 +1,62 @@
+{
+  "origin": "上海",
+  "date_range": {
+    "start": "2026-06-24",
+    "end": "2026-06-26"
+  },
+  "locale": "zh-CN",
+  "notes": "三天旅行，不自驾，公共交通优先，同时希望天气不要太差。",
+  "ranking_profile": {
+    "name": "no-drive-transit-first",
+    "hard_filters": [
+      "max_precipitation_probability",
+      "max_precipitation_sum_mm",
+      "no_self_drive",
+      "max_total_travel_minutes",
+      "max_transfer_count"
+    ],
+    "weather_policy": {
+      "max_precipitation_probability": 70,
+      "max_precipitation_sum_mm": 25,
+      "min_temperature_c": 8,
+      "max_temperature_c": 35,
+      "ideal_min_temperature_c": 16,
+      "ideal_max_temperature_c": 28
+    },
+    "transport_policy": {
+      "no_self_drive": true,
+      "preferred_modes": ["transit"],
+      "max_total_travel_minutes": 240,
+      "max_transfer_count": 5,
+      "max_walking_distance_meters": 3000
+    },
+    "weights": {
+      "weather": 0.8,
+      "transport": 1.0,
+      "evidence_quality": 0.2
+    }
+  },
+  "candidates": [
+    {
+      "name": "杭州",
+      "country_or_region": "中国",
+      "latitude": 30.2741,
+      "longitude": 120.1551,
+      "themes": ["西湖", "城市短途", "美食"]
+    },
+    {
+      "name": "苏州",
+      "country_or_region": "中国",
+      "latitude": 31.2989,
+      "longitude": 120.5853,
+      "themes": ["园林", "古城", "高铁"]
+    },
+    {
+      "name": "南京",
+      "country_or_region": "中国",
+      "latitude": 32.0603,
+      "longitude": 118.7969,
+      "themes": ["历史", "博物馆", "美食"]
+    }
+  ]
+}

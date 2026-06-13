@@ -39,6 +39,15 @@ uv run roamwise recommend weather examples/requests/rain_first.json \
 
 This command reads a structured travel request, fetches Open-Meteo forecasts for the candidate destinations, applies the request's weather hard filters, ranks the candidates, and renders a Markdown report.
 
+Run the combined destination recommendation spike:
+
+```bash
+uv run roamwise recommend destination examples/requests/no_drive.json \
+  --output artifacts/no-drive-destination.md
+```
+
+This command combines Open-Meteo weather data with Amap transit route feasibility for a no-self-drive request.
+
 Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
 
 ```bash
