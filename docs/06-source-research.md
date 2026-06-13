@@ -249,6 +249,11 @@ Output:
 - Last-mile complexity.
 - Self-drive dependency score.
 
+Implementation note:
+
+- Start with Amap Web Service API adapter for deterministic, testable route facts.
+- Keep Amap MCP as a later agent-experience layer for exploratory map interaction and possible app handoff.
+
 ### Spike C: Inspiration Source
 
 Goal: validate itinerary material collection.

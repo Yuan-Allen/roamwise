@@ -17,4 +17,6 @@ Current command:
 
 ```text
 uv run roamwise recommend weather examples/requests/rain_first.json
+uv run roamwise amap geocode 西湖 --city 杭州
+uv run roamwise amap driving 121.4737,31.2304 120.1551,30.2741
 ```

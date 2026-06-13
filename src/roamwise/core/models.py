@@ -42,6 +42,16 @@ class DestinationCandidate(BaseModel):
     themes: list[str] = Field(default_factory=list)
 
 
+class GeoPoint(BaseModel):
+    longitude: float = Field(ge=-180, le=180)
+    latitude: float = Field(ge=-90, le=90)
+    label: str | None = None
+
+    @property
+    def amap_location(self) -> str:
+        return f"{self.longitude},{self.latitude}"
+
+
 class WeatherPolicy(BaseModel):
     max_precipitation_probability: int | None = Field(
         default=None,
@@ -86,6 +96,21 @@ class RankingProfile(BaseModel):
     hard_filters: list[str] = Field(default_factory=list)
     weather_policy: WeatherPolicy = Field(default_factory=WeatherPolicy)
     weights: RankingWeights = Field(default_factory=RankingWeights)
+
+
+class RouteMode(StrEnum):
+    DRIVING = "driving"
+    TRANSIT = "transit"
+    WALKING = "walking"
+    BICYCLING = "bicycling"
+
+
+class TransportPolicy(BaseModel):
+    no_self_drive: bool = False
+    preferred_modes: list[RouteMode] = Field(default_factory=lambda: [RouteMode.TRANSIT])
+    max_total_travel_minutes: int | None = Field(default=None, ge=0)
+    max_transfer_count: int | None = Field(default=None, ge=0)
+    max_walking_distance_meters: int | None = Field(default=None, ge=0)
 
 
 class TravelRequest(BaseModel):
@@ -142,6 +167,20 @@ class WeatherForecast(BaseModel):
         if not daily:
             raise ValueError("weather forecast must include at least one daily record")
         return daily
+
+
+class RoutePlan(BaseModel):
+    provider: str
+    mode: RouteMode
+    origin: GeoPoint
+    destination: GeoPoint
+    distance_meters: int | None = Field(default=None, ge=0)
+    duration_minutes: float | None = Field(default=None, ge=0)
+    transfer_count: int | None = Field(default=None, ge=0)
+    walking_distance_meters: int | None = Field(default=None, ge=0)
+    cost_estimate: float | None = Field(default=None, ge=0)
+    route_summary: str | None = None
+    evidence: list[Evidence] = Field(default_factory=list)
 
 
 class HardFilterResult(BaseModel):

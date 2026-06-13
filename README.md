@@ -39,6 +39,15 @@ uv run roamwise recommend weather examples/requests/rain_first.json \
 
 This command reads a structured travel request, fetches Open-Meteo forecasts for the candidate destinations, applies the request's weather hard filters, ranks the candidates, and renders a Markdown report.
 
+Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
+
+```bash
+uv run roamwise amap geocode 西湖 --city 杭州
+uv run roamwise amap driving 121.4737,31.2304 120.1551,30.2741
+```
+
+These commands are diagnostic entry points for the route-planning spike. The normalized Amap route data will be merged into destination recommendations in the next iteration.
+
 ## Key Documents
 
 - [Product brief](docs/00-product-brief.md)
