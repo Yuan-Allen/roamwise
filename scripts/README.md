@@ -12,3 +12,9 @@ Planned command groups:
 - `eval`: run golden examples and source-adapter tests.
 
 Commands should emit structured JSON or Markdown and should be safe for an agent to call repeatedly.
+
+Current command:
+
+```text
+uv run roamwise recommend weather examples/requests/rain_first.json
+```

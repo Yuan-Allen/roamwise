@@ -1,0 +1,65 @@
+{
+  "origin": "上海",
+  "date_range": {
+    "start": "2026-06-24",
+    "end": "2026-06-26"
+  },
+  "locale": "zh-CN",
+  "notes": "三天旅行，不想下雨，优先天气舒适。交通、预算和攻略数据会在后续 spike 加入。",
+  "ranking_profile": {
+    "name": "rain-first",
+    "hard_filters": [
+      "max_precipitation_probability",
+      "max_precipitation_sum_mm"
+    ],
+    "weather_policy": {
+      "max_precipitation_probability": 45,
+      "max_precipitation_sum_mm": 5,
+      "min_temperature_c": 8,
+      "max_temperature_c": 34,
+      "ideal_min_temperature_c": 16,
+      "ideal_max_temperature_c": 28
+    },
+    "weights": {
+      "weather": 1.0,
+      "evidence_quality": 0.2
+    }
+  },
+  "candidates": [
+    {
+      "name": "杭州",
+      "country_or_region": "中国",
+      "latitude": 30.2741,
+      "longitude": 120.1551,
+      "themes": ["西湖", "城市短途", "美食"]
+    },
+    {
+      "name": "青岛",
+      "country_or_region": "中国",
+      "latitude": 36.0671,
+      "longitude": 120.3826,
+      "themes": ["海边", "啤酒", "避暑"]
+    },
+    {
+      "name": "首尔",
+      "country_or_region": "韩国",
+      "latitude": 37.5665,
+      "longitude": 126.978,
+      "themes": ["城市", "购物", "美食"]
+    },
+    {
+      "name": "大阪",
+      "country_or_region": "日本",
+      "latitude": 34.6937,
+      "longitude": 135.5023,
+      "themes": ["美食", "城市", "亲子"]
+    },
+    {
+      "name": "新加坡",
+      "country_or_region": "新加坡",
+      "latitude": 1.3521,
+      "longitude": 103.8198,
+      "themes": ["城市", "亲子", "美食"]
+    }
+  ]
+}

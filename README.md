@@ -11,6 +11,7 @@ This repository starts with a docs-first bootstrap because the product depends h
 - Geography: China domestic and international travel.
 - Product scope, source research, architecture, agent design, iteration plan, and Git workflow are documented under `docs/`.
 - Recommended initial stack: Python-first, typed provider adapters, CLI scripts, optional MCP surfaces, and an agent runtime added after the source-access spike.
+- First source-access spike: Open-Meteo weather recommendation CLI.
 
 ## Core Flow
 
@@ -20,6 +21,23 @@ This repository starts with a docs-first bootstrap because the product depends h
 4. Recommend a short list of destinations with tradeoffs.
 5. Generate itinerary references for the recommended destinations.
 6. After the user selects a destination, produce a detailed travel plan with daily schedule, logistics, fallback plans, costs, packing tips, and caveats.
+
+## Quick Start
+
+Install dependencies:
+
+```bash
+uv sync
+```
+
+Run the first weather-only recommendation spike:
+
+```bash
+uv run roamwise recommend weather examples/requests/rain_first.json \
+  --output artifacts/rain-first-weather.md
+```
+
+This command reads a structured travel request, fetches Open-Meteo forecasts for the candidate destinations, applies the request's weather hard filters, ranks the candidates, and renders a Markdown report.
 
 ## Key Documents
 

@@ -41,6 +41,8 @@ docs(architecture): define skill-first source adapter design
 
 ## Phase 2: Source Access Spike
 
+Status: in progress.
+
 Goal: prove that the system can fetch useful, fresh, attributable data.
 
 Deliverables:
@@ -59,13 +61,13 @@ feat/source-access-spike
 
 Recommended first thin slice:
 
-1. Parse one Chinese trip request into a `TravelRequest`.
-2. Generate 10-20 candidate destinations.
-3. Fetch weather for all candidates.
+1. Parse one Chinese trip request into a `TravelRequest`. Done for JSON input.
+2. Generate 10-20 candidate destinations. Started with explicit candidate input.
+3. Fetch weather for all candidates. Done with Open-Meteo.
 4. Fetch China route estimates for a subset through Amap.
 5. Fetch one inspiration source for the top 3.
-6. Score with a dynamic ranking profile.
-7. Produce a sourced markdown report.
+6. Score with a dynamic ranking profile. Done for weather hard filters and weights.
+7. Produce a sourced markdown report. Done for weather-only recommendations.
 
 ## Phase 3: Destination Ranking Prototype
 
