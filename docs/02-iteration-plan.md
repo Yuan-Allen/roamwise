@@ -45,6 +45,8 @@ Status: in progress.
 
 Goal: prove that the system can fetch useful, fresh, attributable data.
 
+Design note: source-access scripts provide tools and scoring signals for the agent. They should not replace agent-led research, source selection, qualitative analysis, or final recommendation synthesis.
+
 Deliverables:
 
 - Minimal provider interfaces.
@@ -62,12 +64,26 @@ feat/source-access-spike
 Recommended first thin slice:
 
 1. Parse one Chinese trip request into a `TravelRequest`. Done for JSON input.
-2. Generate 10-20 candidate destinations. Started with a local city seed generator.
+2. Generate 10-20 candidate destinations. Started with a local seed generator as a fallback only.
 3. Fetch weather for all candidates. Done with Open-Meteo.
 4. Fetch China route estimates for a subset through Amap. Done for geocode, driving, and transit route adapters.
-5. Fetch one inspiration source for the top 3.
+5. Fetch one inspiration source for the top 3. Next priority because agent-led recommendation needs social/guide source analysis.
 6. Score with a dynamic ranking profile. Done for weather hard filters and weights.
 7. Produce a sourced markdown report. Done for weather-only and weather-plus-transit recommendations.
+
+Recommended next branch:
+
+```text
+feat/content-research-spike
+```
+
+Recommended next thin slice:
+
+1. Add a content research adapter interface.
+2. Support one approved source path such as Zhihu MCP/API, Xiaohongshu OpenCLI/browser path, Trip.com guide search, or a search API fallback.
+3. Return structured inspiration evidence: candidate mentions, themes, itinerary patterns, warnings, source references, and freshness.
+4. Let the agent add or remove candidates based on that evidence.
+5. Rerun weather and route tools for the updated candidate set.
 
 ## Phase 3: Destination Ranking Prototype
 

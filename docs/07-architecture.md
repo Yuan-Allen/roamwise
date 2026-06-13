@@ -2,22 +2,27 @@
 
 ## Architectural Decision
 
-Roamwise should be built as a skill-first, tool-assisted research system.
+Roamwise should be built as an agent-led, skill-first, tool-assisted research system.
 
-The skill owns workflow, research discipline, and report shape. Scripts and Python modules own deterministic work: source access, normalization, caching, filtering, scoring, and artifact generation. Agent orchestration can call those scripts, but the scoring engine should remain testable without an LLM.
+The agent is a decision-making participant, not a wrapper around scripts. It owns research strategy, source selection, social/guide interpretation, tradeoff synthesis, and final recommendations. The skill owns workflow, research discipline, and report shape. Scripts and Python modules own deterministic work: source access, normalization, caching, filtering, scoring signals, and artifact generation.
+
+Agent orchestration can call scripts, but scripts are support tools. They standardize repeatable actions and provide evidence/signals; they should not be treated as the full recommendation system.
 
 ## System Shape
 
 ```text
 User request
   -> Roamwise skill workflow
+  -> agent research plan
   -> intake parser
   -> dynamic ranking profile
-  -> candidate generator
+  -> seed candidate generator
+  -> live source research and candidate expansion
   -> source adapters
   -> evidence store
   -> hard filters
-  -> ranking engine
+  -> ranking signals
+  -> agent synthesis
   -> recommendation report
   -> itinerary reference generator
   -> selected-destination detail planner
@@ -74,12 +79,14 @@ Responsibilities:
 - Route to scripts/tools.
 - Require source freshness and citation checks.
 - Enforce final report sections.
+- Keep the agent in charge of research planning and synthesis.
 
 Non-responsibilities:
 
 - No hidden ranking math.
 - No credentials.
 - No source-specific scraping logic.
+- No assumption that local seeds or numeric scores alone decide recommendations.
 
 ### CLI And Scripts Layer
 
@@ -89,6 +96,7 @@ Responsibilities:
 - Emit JSON or Markdown artifacts.
 - Validate inputs and outputs.
 - Support deterministic reruns.
+- Standardize fixed procedures so the agent can reuse them reliably.
 
 Example commands:
 
@@ -144,7 +152,7 @@ Required fields:
 
 ### Ranking Layer
 
-Ranking must support different priorities on every request.
+Ranking must support different priorities on every request. It produces decision-support signals for the agent rather than replacing agent judgment.
 
 Pipeline:
 
@@ -154,6 +162,9 @@ Pipeline:
 4. Weight scores using the current profile.
 5. Penalize missing, stale, or low-confidence evidence.
 6. Explain the result with facts and tradeoffs.
+7. Let the agent reconcile the score with source content, user intent, and qualitative findings.
+
+The scoring layer should answer "what do the measurable signals say?" The agent should answer "what should we recommend, given all evidence and context?"
 
 Example hard filters:
 
@@ -214,6 +225,8 @@ Detailed plans should include:
 
 - Same scripts.
 - Agent follows `skills/roamwise/SKILL.md`.
+- Scripts provide evidence, candidates, route facts, weather facts, cacheable artifacts, and draft scoring signals.
+- The agent performs source selection, live research, content analysis, recommendation synthesis, itinerary drafting, and final review.
 - Optional OpenAI Agents SDK or LangGraph orchestrator after source adapters stabilize.
 
 ### Future Product Surface
@@ -233,6 +246,7 @@ Failure behavior:
 - Missing public transit: label self-drive dependency as unknown; ask user or lower rank.
 - Social source unavailable: continue with official/search sources and mark inspiration gap.
 - Conflicting facts: prefer official and newer sources, preserve conflict note.
+- Local candidate seeds are only fallback starting points; if social/guide research suggests better destinations, the agent should add them and rerun relevant tools.
 
 ## Security Boundaries
 

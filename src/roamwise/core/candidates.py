@@ -4,6 +4,8 @@ from math import asin, cos, radians, sin, sqrt
 
 from roamwise.core.models import DestinationCandidate, TravelRequest
 
+# Bootstrap fallback only. The agent should expand or replace these candidates
+# through live source research when the user asks for real destination discovery.
 CITY_SEEDS: list[DestinationCandidate] = [
     DestinationCandidate(
         name="杭州",

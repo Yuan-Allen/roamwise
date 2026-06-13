@@ -15,9 +15,9 @@ Use a Python-first stack for the MVP:
 - Playwright for controlled browser automation when API/MCP/CLI access is unavailable.
 - pytest, respx, freezegun, and golden Markdown fixtures for tests.
 
-Agent orchestration should start thin:
+Agent orchestration should start thin, but agent judgment remains central:
 
-- First implementation: deterministic scripts plus a repo skill.
+- First implementation: deterministic scripts plus a repo skill, with the agent using scripts as research tools.
 - Add OpenAI Agents SDK when we need managed tool execution, guardrails, sessions, tracing, MCP integration, or multi-agent handoffs.
 - Add LangGraph only if workflows become long-running, stateful, resumable graphs where explicit nodes, persistence, and human-in-the-loop state editing are worth the extra structure.
 
@@ -53,12 +53,13 @@ TypeScript can be added later for a web UI or an MCP server if the project needs
 
 ### Phase 1: No Heavy Agent Framework
 
-Use scripts and typed functions first:
+Use scripts and typed functions first, but keep them in a tool role:
 
 - Easier to test.
 - Easier to debug provider access.
 - Keeps ranking deterministic.
 - Avoids hiding source access problems inside an agent loop.
+- Keeps fixed procedures convenient while the agent still decides what to research and recommend.
 
 ### Phase 2: OpenAI Agents SDK
 

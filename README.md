@@ -7,11 +7,17 @@ This repository starts with a docs-first bootstrap because the product depends h
 ## Current Status
 
 - Project initialized as a Git-managed workspace.
-- MVP shape: skill-driven workflow with scripts and tools.
+- MVP shape: agent-led, skill-driven workflow with scripts and tools.
 - Geography: China domestic and international travel.
 - Product scope, source research, architecture, agent design, iteration plan, and Git workflow are documented under `docs/`.
 - Recommended initial stack: Python-first, typed provider adapters, CLI scripts, optional MCP surfaces, and an agent runtime added after the source-access spike.
 - First source-access spike: Open-Meteo weather recommendation CLI.
+
+## Design Principle
+
+Roamwise is agent-led. Scripts standardize fixed, repeatable work such as fetching weather, fetching routes, normalizing evidence, caching, and rendering reports. They are tools for the agent, not the whole decision system.
+
+The agent remains responsible for deciding what to research, which sources to use, how to interpret social and guide content, when to ask follow-up questions, and how to synthesize destination recommendations and itineraries. Local seed candidates are only a bootstrap fallback; production recommendations should be informed by live research from sources such as Xiaohongshu, Zhihu, Trip.com, official tourism sites, maps, and other approved providers.
 
 ## Core Flow
 
