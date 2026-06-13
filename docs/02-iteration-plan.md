@@ -19,10 +19,10 @@ Goal: turn the open checklist into concrete MVP decisions.
 
 Deliverables:
 
-- MVP user flow.
-- Chosen geography and trip types.
+- MVP user flow: skill-driven workflow with scripts and tools.
+- Chosen geography and trip types: China domestic and international travel.
 - Source access matrix.
-- Initial ranking rubric.
+- Dynamic ranking profile design.
 - 5-10 representative travel requests for testing.
 
 Suggested branch:
@@ -36,6 +36,7 @@ Suggested commits:
 ```text
 docs: define mvp travel-planning requirements
 docs(data): record initial source access decisions
+docs(architecture): define skill-first source adapter design
 ```
 
 ## Phase 2: Source Access Spike
@@ -45,9 +46,9 @@ Goal: prove that the system can fetch useful, fresh, attributable data.
 Deliverables:
 
 - Minimal provider interfaces.
-- Weather lookup prototype.
-- Transport or traffic lookup prototype.
-- Destination-content lookup prototype.
+- Weather lookup prototype, preferably QWeather plus Open-Meteo.
+- Transport or traffic lookup prototype, preferably Amap for China.
+- Destination-content lookup prototype, preferably Zhihu official API/MCP if credentials are available, otherwise a controlled search or OpenCLI adapter.
 - Source freshness and citation schema.
 
 Suggested branch:
@@ -55,6 +56,16 @@ Suggested branch:
 ```text
 feat/source-access-spike
 ```
+
+Recommended first thin slice:
+
+1. Parse one Chinese trip request into a `TravelRequest`.
+2. Generate 10-20 candidate destinations.
+3. Fetch weather for all candidates.
+4. Fetch China route estimates for a subset through Amap.
+5. Fetch one inspiration source for the top 3.
+6. Score with a dynamic ranking profile.
+7. Produce a sourced markdown report.
 
 ## Phase 3: Destination Ranking Prototype
 

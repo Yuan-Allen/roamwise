@@ -7,8 +7,10 @@ This repository starts with a docs-first bootstrap because the product depends h
 ## Current Status
 
 - Project initialized as a Git-managed workspace.
-- Product scope, open questions, data-source plan, agent design, iteration plan, and Git workflow are documented under `docs/`.
-- No application framework has been selected yet.
+- MVP shape: skill-driven workflow with scripts and tools.
+- Geography: China domestic and international travel.
+- Product scope, source research, architecture, agent design, iteration plan, and Git workflow are documented under `docs/`.
+- Recommended initial stack: Python-first, typed provider adapters, CLI scripts, optional MCP surfaces, and an agent runtime added after the source-access spike.
 
 ## Core Flow
 
@@ -27,8 +29,11 @@ This repository starts with a docs-first bootstrap because the product depends h
 - [Agent design](docs/03-agent-design.md)
 - [Data-source plan](docs/04-data-source-plan.md)
 - [Git workflow](docs/05-git-workflow.md)
+- [Source research](docs/06-source-research.md)
+- [Architecture](docs/07-architecture.md)
+- [Technology stack](docs/08-technology-stack.md)
 - [Bootstrap ADR](docs/adr/0001-docs-first-bootstrap.md)
 
 ## Next Decision
 
-Start with `docs/01-clarification-checklist.md`. The first implementation iteration should begin only after the initial product surface, source access methods, and MVP recommendation criteria are clear enough to test.
+Start with `docs/06-source-research.md` and pick the first source-access spike. The recommended first spike is weather plus China routing plus one inspiration source, because this validates factual freshness, hard filters, and subjective travel content in one thin slice.

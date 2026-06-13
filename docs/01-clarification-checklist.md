@@ -4,9 +4,11 @@ Use this checklist to decide what the project should do before implementation. T
 
 ## 1. Product Surface
 
-- Should the first usable version be a CLI, local web app, API service, chat bot, or scheduled report?
+- Decision: the MVP is skill-driven, assisted by scripts and tools.
+- The first usable version should be runnable from the command line and from an agent skill workflow.
+- A local web app or API service can come later after source access and ranking are validated.
 - Is the primary language Chinese, English, or bilingual?
-- Should it focus on domestic China travel first, international travel first, or both?
+- Decision: domestic China and international travel are both in scope.
 - What trip lengths should the MVP optimize for: day trips, weekends, 3-5 days, 1-2 weeks, or flexible?
 - Should the system support solo travel, couples, families, older adults, children, pets, or business travel?
 
@@ -19,7 +21,7 @@ Use this checklist to decide what the project should do before implementation. T
 
 ## 3. Recommendation Criteria
 
-- What matters most: weather comfort, transport convenience, cost, novelty, scenery, food, crowding, safety, or popularity?
+- Decision: ranking criteria must be dynamic per request. One request may prioritize no rain; another may require no self-driving; later requests may combine weather, public transit, budget, food, safety, and novelty.
 - Should scoring be transparent with weights?
 - Are there hard filters, such as no rain, no long transfers, no high altitude, no expensive flights, or no visa risk?
 - Should the agent recommend "do not travel" when all options are poor?
@@ -27,11 +29,12 @@ Use this checklist to decide what the project should do before implementation. T
 
 ## 4. Data Sources
 
-- Weather: which provider should be used, and how fresh must forecasts be?
-- Traffic and local mobility: which source can provide congestion, road closures, public transit, and driving estimates?
-- Long-distance transport: should it query flights, trains, buses, ferries, car rental, or ride hailing?
-- Destination content: which platforms should be used for inspiration and itinerary references, such as Xiaohongshu, Zhihu, Mafengwo, Trip.com, official tourism sites, blogs, or maps?
-- How will each source be accessed: official API, browser automation, opencli, private tool, exported data, search engine, or manual seed list?
+- See `docs/06-source-research.md` for the first source matrix.
+- Weather: likely QWeather plus Open-Meteo for MVP.
+- Maps and routing: likely Amap for China, Google Maps or HERE/TomTom for international coverage.
+- Long-distance transport: Trip.com and Amadeus are likely API candidates; 12306 should be treated as official verification, not a public third-party booking API.
+- Destination content: social and guide sources should be separated from factual sources. Xiaohongshu and Zhihu are high-value China inspiration sources; Google Places, Tripadvisor, Yelp, Foursquare, OpenTripMap, and official tourism sites are stronger international candidates.
+- Access methods should be explicit per source: official API first, MCP wrapper when available, OpenCLI or browser automation only when allowed and needed, search API for discovery, manual seed lists for bootstrap.
 - What rate limits, login requirements, anti-scraping rules, and terms-of-service constraints apply?
 
 ## 5. Evidence And Trust
@@ -59,11 +62,10 @@ Use this checklist to decide what the project should do before implementation. T
 
 ## 8. Technical Choices
 
-- Preferred language and framework: Python, TypeScript, or mixed.
-- Agent runtime: custom tool-calling loop, OpenAI Agents SDK, LangGraph, CrewAI, AutoGen, or other.
-- Storage: local files, SQLite, Postgres, vector database, object storage, or cache only.
-- Queue and scheduling: none for MVP, local worker, Celery, BullMQ, Temporal, or cron.
-- Observability: logs, traces, source audit trail, prompt/version snapshots, cost tracking.
+- Recommended MVP stack: Python-first with `uv`, Pydantic models, Typer CLI, async provider adapters, SQLite/DuckDB for local evidence storage, and Playwright only for sources that need browser automation.
+- Agent runtime should start thin. Use deterministic scripts and typed outputs first; add OpenAI Agents SDK or LangGraph after source adapters and ranking profiles are tested.
+- Storage should start local and auditable: JSONL for raw evidence summaries, SQLite for normalized facts and cache metadata, DuckDB or Polars for analysis if needed.
+- Observability should include structured logs, source audit trail, request IDs, prompt/version snapshots, and cost/latency tracking from the first implementation spike.
 
 ## 9. Privacy, Security, Compliance
 
@@ -83,8 +85,8 @@ Use this checklist to decide what the project should do before implementation. T
 
 ## First Answers Needed From You
 
-1. MVP surface: CLI, local web app, API, or chat-style tool?
-2. Initial geography: China domestic only, international only, or both?
-3. Initial data sources and access methods, especially for Xiaohongshu, Zhihu, maps, weather, and transport.
-4. Ranking priorities and hard filters.
-5. Preferred implementation stack.
+1. Which exact source-access spike should be implemented first: weather, China routing, international routing, social inspiration, train/flight, or food/POI?
+2. Which API keys or tools are already available locally?
+3. Should social platforms be allowed through browser automation/OpenCLI, or only through official APIs/MCP?
+4. What are the first 5 representative travel requests for evaluation?
+5. Is the first user-facing language Chinese-only or bilingual?
