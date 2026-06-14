@@ -1,17 +1,26 @@
 # Roamwise
 
-Roamwise is a travel-planning agent project. The goal is to collect fresh signals such as weather, traffic, transportation options, destination content, and travel notes at scale, recommend suitable destinations, then generate increasingly detailed itineraries after the user chooses a destination.
+Roamwise is a skill-first travel research workflow for agents. The repository's primary artifact is the Roamwise skill: a reusable operating procedure that tells an agent how to research destinations, choose sources, compare evidence, recommend trips, and produce detailed travel advice.
 
-This repository starts with a docs-first bootstrap because the product depends heavily on source access, freshness requirements, scoring rules, and agent workflow choices that should be explicit before implementation.
+The Python code in this repository is not the product surface. It is a supporting tool layer for fixed, repeatable procedures such as fetching weather, querying maps, normalizing source evidence, caching, and rendering reports. The agent remains the decision maker.
 
 ## Current Status
 
 - Project initialized as a Git-managed workspace.
-- MVP shape: agent-led, skill-driven workflow with scripts and tools.
+- MVP shape: skill-driven agent workflow with supporting scripts and tools.
 - Geography: China domestic and international travel.
 - Product scope, source research, architecture, agent design, iteration plan, and Git workflow are documented under `docs/`.
-- Recommended initial stack: Python-first, typed provider adapters, CLI scripts, optional MCP surfaces, and an agent runtime added after the source-access spike.
+- Recommended initial stack: lightweight Python tool scripts, typed provider adapters, optional MCP/OpenCLI/browser adapters, and no heavy app framework unless a stable workflow needs it.
 - First source-access spike: Open-Meteo weather recommendation CLI.
+
+## Primary Usage
+
+Use this repository as a skill package for an agent:
+
+1. Load and follow [skills/roamwise/SKILL.md](skills/roamwise/SKILL.md).
+2. Let the agent decide the research plan, source mix, candidate expansion strategy, and final synthesis.
+3. Call scripts only when a stable procedure is useful, such as weather lookup, Amap routing, public web search, evidence normalization, or report rendering.
+4. Treat script outputs as evidence and scoring signals, not final recommendations.
 
 ## Design Principle
 
@@ -28,7 +37,7 @@ The agent remains responsible for deciding what to research, which sources to us
 5. Generate itinerary references for the recommended destinations.
 6. After the user selects a destination, produce a detailed travel plan with daily schedule, logistics, fallback plans, costs, packing tips, and caveats.
 
-## Quick Start
+## Tool Setup
 
 Install dependencies:
 
@@ -36,7 +45,18 @@ Install dependencies:
 uv sync
 ```
 
-Run the first weather-only recommendation spike:
+Optional environment variables:
+
+- `AMAP_API_KEY`: enables Amap Web Service API tools.
+- `TAVILY_API_KEY`: enables the public search adapter for live web references.
+
+Open-Meteo does not require a key.
+
+## Tool Commands
+
+These commands are agent tools. They are useful for repeatable evidence collection, but they should not replace live source research or agent synthesis.
+
+Run the weather-only recommendation tool:
 
 ```bash
 uv run roamwise recommend weather examples/requests/rain_first.json \
@@ -75,7 +95,7 @@ Search public web results for live content references after setting `TAVILY_API_
 uv run roamwise content search examples/requests/auto_candidates_no_drive.json
 ```
 
-This is the recommended first live content path. Platform-specific Xiaohongshu or Zhihu OpenCLI/browser adapters should be added only with strict read-only limits and caching.
+This is an optional runtime content path. It is useful when the agent does not have a built-in web search tool or needs a repeatable search adapter. Platform-specific Xiaohongshu, Zhihu, Ctrip, Trip.com, OpenCLI, MCP, or browser adapters should be added only with strict read-only limits, rate controls, and caching.
 
 Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
 
@@ -97,8 +117,9 @@ These commands are diagnostic entry points for the route-planning spike. The nor
 - [Source research](docs/06-source-research.md)
 - [Architecture](docs/07-architecture.md)
 - [Technology stack](docs/08-technology-stack.md)
+- [Skill-first usage](docs/09-skill-first-usage.md)
 - [Bootstrap ADR](docs/adr/0001-docs-first-bootstrap.md)
 
 ## Next Decision
 
-Start with `docs/06-source-research.md` and pick the first source-access spike. The recommended first spike is weather plus China routing plus one inspiration source, because this validates factual freshness, hard filters, and subjective travel content in one thin slice.
+Start with `skills/roamwise/SKILL.md` and `docs/09-skill-first-usage.md`. The next implementation work should improve source-access playbooks and adapters for content research while keeping the agent responsible for destination discovery, interpretation, and recommendations.

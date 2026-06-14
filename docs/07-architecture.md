@@ -8,6 +8,18 @@ The agent is a decision-making participant, not a wrapper around scripts. It own
 
 Agent orchestration can call scripts, but scripts are support tools. They standardize repeatable actions and provide evidence/signals; they should not be treated as the full recommendation system.
 
+## Repository Role
+
+This repository should be understood as a skill package, not a traditional application.
+
+- `skills/roamwise/SKILL.md` is the primary interface for agents.
+- `docs/` records product decisions, source rules, architecture, and iteration constraints.
+- `src/roamwise/` contains helper tools that agents may call for repeatable procedures.
+- `examples/` contains request fixtures for tool testing and demonstrations.
+- `tests/` keeps the helper tools stable.
+
+The repository should avoid building an app-shaped core too early. Add code when a workflow has become stable enough that the agent benefits from a repeatable tool.
+
 ## System Shape
 
 ```text
@@ -37,6 +49,11 @@ Target layout after the first implementation spike:
 skills/
   roamwise/
     SKILL.md
+docs/
+  00-product-brief.md
+  09-skill-first-usage.md
+examples/
+  requests/
 scripts/
   roamwise
 src/
@@ -97,6 +114,13 @@ Responsibilities:
 - Validate inputs and outputs.
 - Support deterministic reruns.
 - Standardize fixed procedures so the agent can reuse them reliably.
+- Stay narrow: fetch, normalize, score, cache, or render.
+
+Non-responsibilities:
+
+- Do not decide the final destination.
+- Do not replace social/guide interpretation.
+- Do not hide source choice or confidence tradeoffs from the agent.
 
 Example commands:
 
@@ -230,6 +254,8 @@ Detailed plans should include:
 - Optional OpenAI Agents SDK or LangGraph orchestrator after source adapters stabilize.
 
 ### Future Product Surface
+
+Product surfaces are secondary. Add them only after the skill workflow and source-access playbooks are stable.
 
 - FastAPI service for job submission.
 - Local web app or Next.js UI for reports.

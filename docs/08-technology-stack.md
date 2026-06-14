@@ -1,8 +1,8 @@
-# Technology Stack Recommendation
+# Tooling Stack Recommendation
 
 ## Recommendation
 
-Use a Python-first stack for the MVP:
+Use a Python-first supporting tool stack for the MVP. The project itself is skill-first; Python is used to implement repeatable agent tools, not to turn the repository into a conventional backend or app.
 
 - Python 3.12 or newer.
 - `uv` for project, dependency, and script management.
@@ -15,15 +15,15 @@ Use a Python-first stack for the MVP:
 - Playwright for controlled browser automation when API/MCP/CLI access is unavailable.
 - pytest, respx, freezegun, and golden Markdown fixtures for tests.
 
-Agent orchestration should start thin, but agent judgment remains central:
+Agent orchestration should start with the skill, not with a framework:
 
-- First implementation: deterministic scripts plus a repo skill, with the agent using scripts as research tools.
+- First implementation: repo skill plus deterministic scripts, with the agent using scripts as research tools.
 - Add OpenAI Agents SDK when we need managed tool execution, guardrails, sessions, tracing, MCP integration, or multi-agent handoffs.
 - Add LangGraph only if workflows become long-running, stateful, resumable graphs where explicit nodes, persistence, and human-in-the-loop state editing are worth the extra structure.
 
 ## Why Python First
 
-The project is data-heavy and source-adapter-heavy. Python has the strongest fit for:
+The tool layer is data-heavy and source-adapter-heavy. Python has the strongest fit for:
 
 - API clients and browser automation.
 - Data normalization and scoring.
@@ -32,7 +32,7 @@ The project is data-heavy and source-adapter-heavy. Python has the strongest fit
 - Evaluation fixtures.
 - Agent SDK ecosystem.
 
-TypeScript can be added later for a web UI or an MCP server if the project needs a rich product surface.
+TypeScript can be added later for a web UI or an MCP server if the project needs a rich product surface. It should not be added just to make the repository feel like a normal web product.
 
 ## Framework Assessment
 
@@ -45,7 +45,7 @@ TypeScript can be added later for a web UI or an MCP server if the project needs
 | Browser automation | Playwright | Cross-browser automation and tracing | Selenium |
 | Local DB | SQLite | Simple, durable, easy to inspect | Postgres later |
 | Analytics | DuckDB or Polars | Fast local tabular analysis | pandas |
-| Agent runtime | OpenAI Agents SDK after the spike | Python-first managed loops, tools, MCP, sessions, tracing | LangGraph, Pydantic AI |
+| Agent runtime | Defer until needed | The skill is the primary agent interface; frameworks should support stable workflows | OpenAI Agents SDK, LangGraph, Pydantic AI |
 | Workflow graph | Defer LangGraph | Useful for durable graphs, but premature for the first source spike | Custom orchestrator |
 | Web API | FastAPI later | Natural Python API path and Pydantic fit | Litestar, Django Ninja |
 
@@ -53,13 +53,14 @@ TypeScript can be added later for a web UI or an MCP server if the project needs
 
 ### Phase 1: No Heavy Agent Framework
 
-Use scripts and typed functions first, but keep them in a tool role:
+Use the skill plus scripts and typed functions first, but keep code in a tool role:
 
 - Easier to test.
 - Easier to debug provider access.
 - Keeps ranking deterministic.
 - Avoids hiding source access problems inside an agent loop.
 - Keeps fixed procedures convenient while the agent still decides what to research and recommend.
+- Keeps the repository usable by Codex or another capable agent without requiring a custom runtime.
 
 ### Phase 2: OpenAI Agents SDK
 
@@ -120,6 +121,14 @@ agent = [
 ```
 
 Do not install all optional groups immediately. Add `browser` and `agent` only when the first source spike needs them.
+
+## What To Avoid For Now
+
+- Do not build a full backend until the skill workflow proves stable.
+- Do not make local candidate pools the recommendation engine.
+- Do not make a scripted ranking score the final authority.
+- Do not add browser automation for social platforms before defining read-only limits, caching, login assumptions, and rate-control behavior.
+- Do not add a UI until reports, evidence structure, and detailed planning shape are stable.
 
 ## Project Commands To Add Later
 

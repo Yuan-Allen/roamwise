@@ -11,12 +11,34 @@ Use this skill when a user asks for destination recommendations, trip feasibilit
 
 - Evidence first, narrative second.
 - The agent is the decision lead. Scripts standardize repeatable actions and provide evidence or scoring signals.
+- This skill is the product interface. Code in the repository is a tool library for the agent.
 - Separate factual sources from inspiration sources.
 - Treat user-specific constraints as a dynamic ranking profile.
 - Prefer official APIs and official notices for hard filters.
 - Label stale, missing, conflicting, or social-only evidence.
 - Use local seed candidates only as a fallback starting point; expand candidates through live research when useful.
 - Do not book, purchase, post, like, comment, or modify user accounts in the MVP.
+
+## Tool Use Discipline
+
+- Decide the research plan before calling scripts.
+- Use scripts for stable operations: fetch weather, query routes, normalize evidence, inspect cached content, produce draft reports.
+- Use built-in web search, browser tools, MCP, OpenCLI, or platform adapters when qualitative destination discovery is needed.
+- Treat script output as evidence, not authority.
+- Preserve uncertainty when source coverage is weak.
+- Add or remove destination candidates when live research supports it, then rerun relevant factual tools.
+- Do not let a local seed pool, search result order, or numeric score decide the final recommendation by itself.
+
+## When Not To Start With Scripts
+
+Start with live research instead of local scripts when:
+
+- the user asks for inspiration, trend discovery, niche experiences, food scenes, or social sentiment.
+- the candidate space is unclear or too broad.
+- recent events, closures, crowding, visa changes, safety issues, or weather disruptions may dominate the decision.
+- the request depends on platform-specific knowledge from Xiaohongshu, Zhihu, Ctrip/Trip.com, official tourism sites, forums, or local guides.
+
+After live research narrows or expands candidates, use scripts to verify weather, routes, feasibility, and evidence structure.
 
 ## Workflow
 
