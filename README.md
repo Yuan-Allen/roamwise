@@ -69,6 +69,14 @@ uv run roamwise content seed examples/requests/auto_candidates_no_drive.json
 
 This command uses local seed mentions only to standardize the structure that future Xiaohongshu, Zhihu, Trip.com, search, MCP, or OpenCLI adapters should return. It is not a production content source.
 
+Search public web results for live content references after setting `TAVILY_API_KEY`:
+
+```bash
+uv run roamwise content search examples/requests/auto_candidates_no_drive.json
+```
+
+This is the recommended first live content path. Platform-specific Xiaohongshu or Zhihu OpenCLI/browser adapters should be added only with strict read-only limits and caching.
+
 Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
 
 ```bash

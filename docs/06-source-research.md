@@ -218,6 +218,79 @@ Implementation shape:
 - Fetch only pages needed for evidence.
 - Prefer official domains for factual constraints.
 
+## China Content Access Recommendation
+
+### Xiaohongshu
+
+Recommended role:
+
+- High-value inspiration source for recent travel notes, seasonal impressions, photo-driven expectations, food ideas, and pitfalls.
+- Do not use as a factual authority unless corroborated.
+
+Recommended access:
+
+1. Official content API only if a legitimate note/search permission becomes available.
+2. User-approved OpenCLI or browser automation for low-volume, read-only research.
+3. Public search fallback when only public references are needed.
+
+Risk controls:
+
+- `read_only: true`
+- `concurrency: 1`
+- `max_queries_per_run: 5`
+- `max_items_per_query: 10`
+- `min_delay_seconds: 8`
+- `cache_ttl_hours: 24`
+- no likes, follows, comments, favorites, messages, posting, or account-changing actions.
+- no comment/user-profile scraping by default.
+
+OpenCLI position:
+
+- Acceptable as a controlled bridge if the user provides a compliant tool and authenticated access.
+- Not recommended as the default bulk data pipeline.
+
+### Trip.com And Ctrip
+
+Recommended role:
+
+- Strong source for structured travel context: hotels, tickets, tours, attractions, transport products, availability hints, and booking links.
+- Useful guide pages can provide inspiration, but prices and availability should come from official or partner paths.
+
+Recommended access:
+
+1. Trip.com Developers or affiliate/partner APIs where available.
+2. Public guide/search pages for non-transactional inspiration.
+3. Search adapter for discovery.
+
+OpenCLI position:
+
+- Not recommended as the default path because official/partner APIs are more stable and lower risk.
+- Avoid booking, payment, or account-changing automation.
+
+### Zhihu
+
+Recommended role:
+
+- Long-form experience, tradeoff analysis, destination comparisons, and warnings.
+- Better for "why/why not" than real-time facts.
+
+Recommended access:
+
+1. Official API/MCP if accessible.
+2. Search adapter over public Zhihu pages.
+3. Controlled browser access only for a small number of user-approved public pages.
+
+OpenCLI position:
+
+- Not the first choice. Use only if official/API/search paths cannot satisfy the need and the tool is clearly read-only.
+
+Risk controls:
+
+- low query volume.
+- avoid account actions.
+- avoid collecting user profile data.
+- preserve URLs and treat content as inspiration.
+
 ## Recommended First Source Spikes
 
 ### Spike A: Weather First

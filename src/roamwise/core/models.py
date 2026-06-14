@@ -184,6 +184,17 @@ class ContentResearchQuery(BaseModel):
     limit: int = Field(default=10, ge=1, le=50)
 
 
+class ContentAccessPolicy(BaseModel):
+    read_only: bool = True
+    max_queries_per_run: int = Field(default=5, ge=1, le=50)
+    max_items_per_query: int = Field(default=10, ge=1, le=50)
+    concurrency: int = Field(default=1, ge=1, le=5)
+    min_delay_seconds: float = Field(default=8, ge=0)
+    cache_ttl_hours: int = Field(default=24, ge=1)
+    no_account_actions: bool = True
+    no_comment_fetch_by_default: bool = True
+
+
 class ContentMention(BaseModel):
     destination_name: str
     source_name: str
