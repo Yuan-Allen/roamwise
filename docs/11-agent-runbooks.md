@@ -184,9 +184,10 @@ Use when the user asks for subjective fit: food, photos, niche places, recent tr
 Relevant tools:
 
 ```bash
-uv run roamwise content search examples/requests/auto_candidates_no_drive.json
 uv run roamwise recommend destination examples/requests/auto_candidates_no_drive.json
 ```
+
+Use agent-native web search, browser, MCP, or OpenCLI capabilities for the live content discovery step.
 
 ### Synthesis
 

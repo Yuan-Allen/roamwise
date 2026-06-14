@@ -34,7 +34,7 @@ Use this checklist to decide what the project should do before implementation. T
 - Maps and routing: likely Amap for China, Google Maps or HERE/TomTom for international coverage.
 - Long-distance transport: Trip.com and Amadeus are likely API candidates; 12306 should be treated as official verification, not a public third-party booking API.
 - Destination content: social and guide sources should be separated from factual sources. Xiaohongshu and Zhihu are high-value China inspiration sources; Google Places, Tripadvisor, Yelp, Foursquare, OpenTripMap, and official tourism sites are stronger international candidates.
-- Access methods should be explicit per source: official API first, MCP wrapper when available, OpenCLI or browser automation only when allowed and needed, search API for discovery, manual seed lists for bootstrap.
+- Access methods should be explicit per source: official API first, MCP wrapper when available, agent-native web search for discovery, OpenCLI or browser automation only when allowed and needed, manual seed lists for bootstrap.
 - What rate limits, login requirements, anti-scraping rules, and terms-of-service constraints apply?
 
 ## 5. Evidence And Trust

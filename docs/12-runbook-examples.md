@@ -64,9 +64,10 @@ Verification plan:
 Tool plan:
 
 ```bash
-uv run roamwise content search examples/requests/auto_candidates_no_drive.json
 uv run roamwise recommend destination examples/requests/auto_candidates_no_drive.json
 ```
+
+Use agent-native web search, browser, MCP, or OpenCLI capabilities for Xiaohongshu, Zhihu, Ctrip/Trip.com, guide, and official-source discovery.
 
 Recommendation report shape:
 
@@ -128,9 +129,7 @@ Verification plan:
 
 Tool plan:
 
-```bash
-uv run roamwise content search examples/requests/auto_candidates_no_drive.json
-```
+Use agent-native web search, browser, MCP, or OpenCLI capabilities for live content discovery. Use repository scripts only after candidates need factual verification or evidence normalization.
 
 Recommendation report shape:
 
@@ -192,7 +191,7 @@ Verification plan:
 Tool plan:
 
 ```text
-Use built-in web search or approved search adapter for official visa/safety/transport sources.
+Use agent-native web search, browser, MCP, or OpenCLI capabilities for official visa/safety/transport sources.
 Use weather tools once candidate destinations are narrowed.
 Use travel-commerce sources for price and route hints only when access supports them.
 ```

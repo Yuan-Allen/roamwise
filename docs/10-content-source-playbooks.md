@@ -10,7 +10,7 @@ Use this priority order:
 
 1. Official API, official website, or authorized partner feed.
 2. MCP or provider CLI with explicit supported operations.
-3. Built-in web search or search API against public pages.
+3. Agent-native web search or browser access against public pages.
 4. Read-only browser automation with user-approved account/session.
 5. Local seed data only as a bootstrap fallback.
 
@@ -139,7 +139,7 @@ Not recommended for:
 Access strategy:
 
 1. Use an official API/MCP path if the user provides one and permissions are clear.
-2. Use built-in web search or search API for public Q&A pages.
+2. Use agent-native web search for public Q&A pages.
 3. Use browser read-only inspection only when public search snippets are insufficient.
 
 Risk controls:
@@ -158,7 +158,7 @@ Agent usage:
 
 Adapter recommendation:
 
-- P1 search adapter first.
+- P1 agent-native search first.
 - P2 MCP/OpenCLI adapter if a compliant source becomes available.
 
 ### Ctrip And Trip.com
@@ -197,10 +197,10 @@ Agent usage:
 Adapter recommendation:
 
 - P1 official/partner adapter if credentials are available.
-- P1 public guide search adapter for inspiration.
+- P1 agent-native public guide search for inspiration.
 - P2 browser read-only adapter for guide pages.
 
-### Public Search
+### Agent-Native Public Search
 
 Recommended role:
 
@@ -213,7 +213,7 @@ Recommended role:
 Access strategy:
 
 1. Use the agent's built-in web search when available.
-2. Use Tavily or another search API when this repository needs repeatable runtime search.
+2. Use the agent's browser, MCP, or OpenCLI tools when source-specific interaction is needed.
 3. Fetch only the pages needed for evidence.
 
 Risk controls:
@@ -231,7 +231,8 @@ Agent usage:
 
 Adapter recommendation:
 
-- P0 as the first live content adapter because it has low account and platform risk.
+- P0 as an agent-native workflow, not a repository Python adapter.
+- Add a repository adapter only after the agent workflow is stable and repeatability is more important than flexibility.
 
 ### Official Tourism And Attraction Sources
 

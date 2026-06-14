@@ -9,11 +9,7 @@ import typer
 from pydantic import TypeAdapter
 from rich.console import Console
 
-from roamwise.adapters.content import (
-    LocalContentSeedAdapter,
-    MissingSearchApiKeyError,
-    SearchContentAdapter,
-)
+from roamwise.adapters.content import LocalContentSeedAdapter
 from roamwise.adapters.maps import AmapClient, AmapError, MissingAmapApiKeyError
 from roamwise.adapters.weather import OpenMeteoWeatherClient
 from roamwise.core.candidates import ensure_candidates
@@ -230,41 +226,6 @@ def content_seed(
         limit=limit,
     )
     result = asyncio.run(LocalContentSeedAdapter().research(query))
-    console.print(result.model_dump_json(indent=2))
-
-
-@content_app.command("search")
-def content_search(
-    request_path: Annotated[
-        Path,
-        typer.Argument(
-            exists=True,
-            file_okay=True,
-            dir_okay=False,
-            readable=True,
-            help="Path to a TravelRequest JSON file.",
-        ),
-    ],
-    limit: Annotated[int, typer.Option("--limit", "-n", min=1, max=10)] = 5,
-) -> None:
-    """Search public web results for destination inspiration.
-
-    This is the recommended first live content path before platform-specific
-    browser/OpenCLI access.
-    """
-
-    request = ensure_candidates(_load_request(request_path), limit=limit)
-    query = ContentResearchQuery(
-        query=_content_query_text(request),
-        origin=request.origin,
-        destination_names=[candidate.name for candidate in request.candidates],
-        themes=_request_themes(request),
-        limit=limit,
-    )
-    try:
-        result = asyncio.run(SearchContentAdapter().research(query))
-    except MissingSearchApiKeyError as exc:
-        raise typer.BadParameter(str(exc), param_hint="TAVILY_API_KEY") from exc
     console.print(result.model_dump_json(indent=2))
 
 

@@ -52,12 +52,11 @@ Use repository tools as optional helpers:
 - Weather and destination checks: `uv run roamwise recommend weather ...` and `uv run roamwise recommend destination ...`.
 - Amap diagnostics: `uv run roamwise amap geocode ...` and `uv run roamwise amap driving ...`.
 - Content evidence contract: `uv run roamwise content seed ...`.
-- Runtime public search adapter: `uv run roamwise content search ...` when `TAVILY_API_KEY` is configured.
+- Live content discovery should use agent-native web search, browser, MCP, or OpenCLI capabilities before adding repository adapters.
 
 Tool assumptions:
 
 - `AMAP_API_KEY` enables Amap Web Service API tools.
-- `TAVILY_API_KEY` enables the public search adapter.
 - Open-Meteo weather access does not require a key.
 - Tool output is evidence or a draft signal, not the final answer.
 

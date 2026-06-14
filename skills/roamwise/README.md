@@ -71,12 +71,6 @@ Content evidence contract:
 uv run roamwise content seed examples/requests/auto_candidates_no_drive.json
 ```
 
-Public search adapter:
-
-```bash
-uv run roamwise content search examples/requests/auto_candidates_no_drive.json
-```
-
 Amap diagnostics:
 
 ```bash
@@ -87,8 +81,9 @@ uv run roamwise amap driving 121.4737,31.2304 120.1551,30.2741
 ## Environment
 
 - `AMAP_API_KEY`: enables Amap tools.
-- `TAVILY_API_KEY`: enables the public search adapter.
 - Open-Meteo weather access requires no key.
+
+Live content discovery should use agent-native web search, browser, MCP, or OpenCLI capabilities. Add repository adapters only after a workflow is stable enough to standardize.
 
 Do not commit secrets, cookies, raw private social content, or login artifacts.
 

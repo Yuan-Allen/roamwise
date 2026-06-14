@@ -49,7 +49,6 @@ uv sync
 Optional environment variables:
 
 - `AMAP_API_KEY`: enables Amap Web Service API tools.
-- `TAVILY_API_KEY`: enables the public search adapter for live web references.
 
 Open-Meteo does not require a key.
 
@@ -90,13 +89,9 @@ uv run roamwise content seed examples/requests/auto_candidates_no_drive.json
 
 This command uses local seed mentions only to standardize the structure that future Xiaohongshu, Zhihu, Trip.com, search, MCP, or OpenCLI adapters should return. It is not a production content source.
 
-Search public web results for live content references after setting `TAVILY_API_KEY`:
+For live content research, use the agent's native web search, browser, MCP, or OpenCLI capabilities first. Repository scripts only keep the content evidence schema stable; they should not become the main search path.
 
-```bash
-uv run roamwise content search examples/requests/auto_candidates_no_drive.json
-```
-
-This is an optional runtime content path. It is useful when the agent does not have a built-in web search tool or needs a repeatable search adapter. Platform-specific Xiaohongshu, Zhihu, Ctrip, Trip.com, OpenCLI, MCP, or browser adapters should be added only with strict read-only limits, rate controls, and caching.
+Platform-specific Xiaohongshu, Zhihu, Ctrip, Trip.com, OpenCLI, MCP, or browser adapters should be added only with strict read-only limits, rate controls, and caching after the agent workflow is stable.
 
 Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
 

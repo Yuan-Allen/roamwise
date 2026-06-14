@@ -81,7 +81,7 @@ Recommended next thin slice:
 
 1. Add a content research adapter interface. Done with `ContentResearchQuery`, `ContentMention`, and `ContentResearchResult`.
 2. Document source-access playbooks for Xiaohongshu, Zhihu, Ctrip/Trip.com, public search, and official tourism sources.
-3. Support one approved source path such as Zhihu MCP/API, Xiaohongshu OpenCLI/browser path, Trip.com guide search, or a search API fallback.
+3. Support one approved source path such as agent-native web search, Zhihu MCP/API, Xiaohongshu OpenCLI/browser path, or Trip.com guide search.
 4. Return structured inspiration evidence: candidate mentions, themes, itinerary patterns, warnings, source references, and freshness.
 5. Let the agent add or remove candidates based on that evidence.
 6. Rerun weather and route tools for the updated candidate set.
@@ -91,7 +91,7 @@ Skill-first acceptance criteria:
 - The agent can use the skill without treating any script as the final recommender.
 - The content tool returns evidence that helps the agent reason, not opaque rankings.
 - The local candidate generator remains a bootstrap/fallback path only.
-- The docs say when to use built-in web search, platform-specific access, search APIs, MCP, OpenCLI, or browser automation.
+- The docs say when to use agent-native web search, platform-specific access, MCP, OpenCLI, or browser automation.
 
 ## Phase 2.5: Skill Usage Hardening
 

@@ -152,7 +152,7 @@ Adapter types:
 - `mcp`: MCP server tool.
 - `cli`: OpenCLI or provider-specific CLI.
 - `browser`: Playwright automation.
-- `search`: search API plus page fetch.
+- `agent_native_search`: agent-provided web search or browsing capability.
 - `manual`: curated seed data.
 
 ### Evidence Layer
