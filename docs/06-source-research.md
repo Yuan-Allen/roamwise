@@ -19,6 +19,8 @@ Preferred access order:
 5. OpenCLI or browser automation with user-provided access and source-specific policy review.
 6. Manual seed list for early testing.
 
+For platform-specific content access rules, see [Content source playbooks](10-content-source-playbooks.md).
+
 ## Priority Matrix
 
 | Priority | Source | Region | Data | Recommended Access | Why It Matters | Caveat |

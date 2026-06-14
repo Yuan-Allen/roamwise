@@ -118,6 +118,7 @@ These commands are diagnostic entry points for the route-planning spike. The nor
 - [Architecture](docs/07-architecture.md)
 - [Technology stack](docs/08-technology-stack.md)
 - [Skill-first usage](docs/09-skill-first-usage.md)
+- [Content source playbooks](docs/10-content-source-playbooks.md)
 - [Bootstrap ADR](docs/adr/0001-docs-first-bootstrap.md)
 
 ## Next Decision

@@ -78,6 +78,15 @@ Proceed with assumptions when the missing information only affects ranking style
 - Preserve enough metadata to reproduce a recommendation.
 - When social or guide research reveals better candidates than local seeds, add them and rerun the relevant tools.
 
+## Content Source Routing
+
+- Use Xiaohongshu for recent domestic inspiration, lifestyle fit, food, photo spots, crowd comments, and pitfalls; corroborate factual claims elsewhere.
+- Use Zhihu for long-form tradeoffs, comparisons, "is it worth it" reasoning, and hidden constraints.
+- Use Ctrip or Trip.com for travel-commerce context, hotel-area clues, attraction/ticket references, and booking-link context; do not claim live availability without supported access and timestamps.
+- Use public search to discover official pages, indexed guide content, and international references before adding platform-specific automation.
+- Use official tourism, attraction, transport, weather, visa, and safety sources for hard filters and detailed-plan verification.
+- Follow `docs/10-content-source-playbooks.md` before using OpenCLI or browser access for any social or guide platform.
+
 ## Expected Artifacts
 
 - `TravelRequest`
