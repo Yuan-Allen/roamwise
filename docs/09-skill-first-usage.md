@@ -6,11 +6,12 @@ Roamwise should be used as a skill package for an agent. The skill is the stable
 
 1. The agent reads `skills/roamwise/SKILL.md`.
 2. The agent turns the user request into constraints, hard filters, and ranking priorities.
-3. The agent decides which factual and inspiration sources are needed.
-4. The agent uses built-in web search, browser tools, MCP, OpenCLI, APIs, or repository scripts as appropriate.
-5. Scripts return structured facts, evidence, draft scoring signals, or artifacts.
-6. The agent interprets evidence, resolves conflicts, expands candidates, and writes recommendations.
-7. After the user chooses a destination, the agent performs deeper targeted research and drafts a detailed plan.
+3. The agent selects the closest runbook from `docs/11-agent-runbooks.md`.
+4. The agent decides which factual and inspiration sources are needed.
+5. The agent uses built-in web search, browser tools, MCP, OpenCLI, APIs, or repository scripts as appropriate.
+6. Scripts return structured facts, evidence, draft scoring signals, or artifacts.
+7. The agent interprets evidence, resolves conflicts, expands candidates, and writes recommendations.
+8. After the user chooses a destination, the agent performs deeper targeted research and drafts a detailed plan.
 
 ## Boundary
 

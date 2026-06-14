@@ -40,6 +40,16 @@ Start with live research instead of local scripts when:
 
 After live research narrows or expands candidates, use scripts to verify weather, routes, feasibility, and evidence structure.
 
+## Runbook Selection
+
+- Use `docs/11-agent-runbooks.md` to choose an execution pattern before starting a recommendation.
+- Use the weather-first runbook when rain, heat, cold, wind, snow, typhoon, or AQI is the main constraint.
+- Use the no-drive mobility runbook when public transport, walking burden, older adults, stroller use, or accessibility dominates.
+- Use the inspiration-first domestic runbook when the request is about food, photos, niche places, recent trends, lifestyle fit, or weekend ideas.
+- Use the international feasibility runbook when passport, visa, safety, flight complexity, or border rules dominate.
+- Use the detailed destination advisor runbook after the user selects a destination.
+- If multiple runbooks apply, apply hard filters first, then use inspiration sources to improve fit.
+
 ## Workflow
 
 1. Parse the user's request into structured constraints.
