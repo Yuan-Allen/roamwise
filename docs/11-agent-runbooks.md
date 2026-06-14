@@ -7,25 +7,66 @@ Each runbook separates two phases:
 - Discovery: find plausible destinations and themes.
 - Verification: test those candidates against hard constraints and fresh facts.
 
-## Runbook Selection
+## Runbook Composition
 
-Choose the closest runbook based on the user's strongest constraint.
+Runbooks are composable. A real user request often maps to several runbooks at the same time.
 
-| User Request Pattern | Primary Runbook | Main Risk |
+The agent should build a runbook stack:
+
+- `primary_runbook`: the runbook that addresses the dominant risk or decision driver.
+- `secondary_runbooks`: additional runbooks that cover other constraints or preferences.
+- `hard_filter_runbooks`: runbooks that can exclude destinations.
+- `preference_runbooks`: runbooks that improve fit after hard filters pass.
+- `post_selection_runbook`: the detailed destination advisor after the user chooses a destination.
+
+| User Request Pattern | Runbook | Type | Main Risk |
 | --- | --- | --- |
-| no rain, mild weather, avoid heat/cold, typhoon/snow concern | Weather-first | Weather can invalidate otherwise attractive destinations |
-| no self-drive, public transit only, older adults, stroller, low walking burden | No-drive mobility | Destination may be attractive but locally impractical |
-| food, photos, niche, lifestyle, recent popularity, weekend ideas | Inspiration-first domestic | Social content may be trendy but not feasible |
-| international, visa, safety, flight complexity, language, border rules | International feasibility | Entry, safety, and transport constraints dominate |
-| user already chose destination | Detailed destination advisor | Need depth, official checks, and fallback plans |
+| no rain, mild weather, avoid heat/cold, typhoon/snow concern | Weather-first | hard filter or strong preference | Weather can invalidate otherwise attractive destinations |
+| no self-drive, public transit only, older adults, stroller, low walking burden | No-drive mobility | hard filter or feasibility filter | Destination may be attractive but locally impractical |
+| food, photos, niche, lifestyle, recent popularity, weekend ideas | Inspiration-first domestic | preference and discovery | Social content may be trendy but not feasible |
+| international, visa, safety, flight complexity, language, border rules | International feasibility | hard filter and feasibility filter | Entry, safety, and transport constraints dominate |
+| user already chose destination | Detailed destination advisor | post-selection | Need depth, official checks, and fallback plans |
 
-If multiple patterns apply, apply hard-filter runbooks first, then inspiration runbooks.
+Composition rules:
+
+1. Parse the request into hard filters, feasibility constraints, preferences, and post-selection tasks.
+2. Put hard-filter runbooks before preference runbooks.
+3. Use inspiration runbooks to discover and enrich candidates, but do not let them override hard filters.
+4. Use verification steps from every applicable runbook.
+5. Use the detailed destination advisor only after the user selects a destination, unless the user has already chosen one.
+
+Example:
+
+```text
+User: 6月底从上海出发，3-5天，不想下雨，不自驾，想吃得好，最好小众一点。
+
+primary_runbook: Weather-first
+secondary_runbooks:
+  - No-drive mobility
+  - Inspiration-first domestic
+hard_filter_runbooks:
+  - Weather-first
+  - No-drive mobility
+preference_runbooks:
+  - Inspiration-first domestic
+post_selection_runbook:
+  - Detailed destination advisor, only after the user chooses a destination
+```
+
+Execution order:
+
+1. Discover candidates through inspiration and guide sources because the candidate set is broad.
+2. Verify weather and no-drive feasibility because they are hard filters.
+3. Rank candidates that pass hard filters by food, niche fit, itinerary quality, and evidence confidence.
+4. Present recommendations and filtered-out destinations.
+5. After user selection, run the detailed destination advisor.
 
 ## Shared Output Contract
 
 Every recommendation run should produce:
 
 - assumptions and missing inputs.
+- selected runbook stack.
 - source plan.
 - candidate discovery notes.
 - verification results.
@@ -73,6 +114,7 @@ uv run roamwise recommend weather examples/requests/rain_first.json
 - Recommend destinations that pass weather constraints and still match the user's travel style.
 - Explain rejected candidates clearly.
 - Include backup destinations or bad-weather alternatives.
+- If combined with inspiration-first, rank only weather-feasible candidates by social/guide fit.
 
 ## Runbook B: No-Drive Mobility Recommendation
 
@@ -110,6 +152,7 @@ uv run roamwise recommend destination examples/requests/no_drive.json
 - Recommend compact destinations with viable arrival and local movement.
 - Explain whether taxi-only segments are acceptable.
 - Include hotel-area suggestions that reduce transfers.
+- If combined with inspiration-first, reject attractive but locally dispersed destinations unless taxi or chartered transport is acceptable.
 
 ## Runbook C: Inspiration-First Domestic Recommendation
 
@@ -150,6 +193,7 @@ uv run roamwise recommend destination examples/requests/auto_candidates_no_drive
 - Recommend destinations by matching vibe plus feasibility.
 - Include social themes but do not overclaim them as facts.
 - Explain what needs official verification before booking.
+- If combined with weather-first, no-drive, or international feasibility, use inspiration only after hard filters pass.
 
 ## Runbook D: International Feasibility Recommendation
 
@@ -222,6 +266,7 @@ Produce:
 
 Before finalizing, the agent must check:
 
+- Is the runbook stack explicit?
 - Did discovery include sources beyond local seeds when the candidate space was broad?
 - Did verification test all hard filters?
 - Are social claims labeled as inspiration?
