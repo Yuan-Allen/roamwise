@@ -7,6 +7,21 @@ description: Agent-led workflow for researching travel destinations, using Roamw
 
 Use this skill when a user asks for destination recommendations, trip feasibility research, itinerary references, or detailed travel advice.
 
+## Skill Package Entry
+
+When this repository is provided as a skill package, treat this file as the primary instruction surface.
+
+Read references in this order as needed:
+
+1. `skills/roamwise/README.md` for package usage, scope, and tool assumptions.
+2. `docs/09-skill-first-usage.md` for the operating model and agent/tool boundary.
+3. `docs/11-agent-runbooks.md` for runbook composition.
+4. `docs/12-runbook-examples.md` for complex or ambiguous request examples.
+5. `docs/10-content-source-playbooks.md` before using Xiaohongshu, Zhihu, Ctrip/Trip.com, public search, OpenCLI, MCP, or browser access.
+6. `README.md` for available CLI tool commands and environment variables.
+
+Do not require reading every document for every request. Read the smallest set needed to execute safely.
+
 ## Principles
 
 - Evidence first, narrative second.
@@ -28,6 +43,23 @@ Use this skill when a user asks for destination recommendations, trip feasibilit
 - Preserve uncertainty when source coverage is weak.
 - Add or remove destination candidates when live research supports it, then rerun relevant factual tools.
 - Do not let a local seed pool, search result order, or numeric score decide the final recommendation by itself.
+- Prefer agent-native web/search/browser capabilities for exploratory research when available; use repository scripts when repeatability or normalized evidence is useful.
+
+## Available Tool Families
+
+Use repository tools as optional helpers:
+
+- Weather and destination checks: `uv run roamwise recommend weather ...` and `uv run roamwise recommend destination ...`.
+- Amap diagnostics: `uv run roamwise amap geocode ...` and `uv run roamwise amap driving ...`.
+- Content evidence contract: `uv run roamwise content seed ...`.
+- Runtime public search adapter: `uv run roamwise content search ...` when `TAVILY_API_KEY` is configured.
+
+Tool assumptions:
+
+- `AMAP_API_KEY` enables Amap Web Service API tools.
+- `TAVILY_API_KEY` enables the public search adapter.
+- Open-Meteo weather access does not require a key.
+- Tool output is evidence or a draft signal, not the final answer.
 
 ## When Not To Start With Scripts
 

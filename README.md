@@ -18,9 +18,10 @@ The Python code in this repository is not the product surface. It is a supportin
 Use this repository as a skill package for an agent:
 
 1. Load and follow [skills/roamwise/SKILL.md](skills/roamwise/SKILL.md).
-2. Let the agent decide the research plan, source mix, candidate expansion strategy, and final synthesis.
-3. Call scripts only when a stable procedure is useful, such as weather lookup, Amap routing, public web search, evidence normalization, or report rendering.
-4. Treat script outputs as evidence and scoring signals, not final recommendations.
+2. Use [skills/roamwise/README.md](skills/roamwise/README.md) for package-level usage and tool assumptions.
+3. Let the agent decide the research plan, source mix, candidate expansion strategy, and final synthesis.
+4. Call scripts only when a stable procedure is useful, such as weather lookup, Amap routing, public web search, evidence normalization, or report rendering.
+5. Treat script outputs as evidence and scoring signals, not final recommendations.
 
 ## Design Principle
 
