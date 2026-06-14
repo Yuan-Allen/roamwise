@@ -61,6 +61,14 @@ uv run roamwise recommend destination examples/requests/auto_candidates_no_drive
   --output artifacts/auto-candidates-no-drive.md
 ```
 
+Inspect the content-research output contract:
+
+```bash
+uv run roamwise content seed examples/requests/auto_candidates_no_drive.json
+```
+
+This command uses local seed mentions only to standardize the structure that future Xiaohongshu, Zhihu, Trip.com, search, MCP, or OpenCLI adapters should return. It is not a production content source.
+
 Inspect Amap Web Service API access after setting `AMAP_API_KEY`:
 
 ```bash

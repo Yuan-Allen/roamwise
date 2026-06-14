@@ -79,7 +79,7 @@ feat/content-research-spike
 
 Recommended next thin slice:
 
-1. Add a content research adapter interface.
+1. Add a content research adapter interface. Done with `ContentResearchQuery`, `ContentMention`, and `ContentResearchResult`.
 2. Support one approved source path such as Zhihu MCP/API, Xiaohongshu OpenCLI/browser path, Trip.com guide search, or a search API fallback.
 3. Return structured inspiration evidence: candidate mentions, themes, itinerary patterns, warnings, source references, and freshness.
 4. Let the agent add or remove candidates based on that evidence.

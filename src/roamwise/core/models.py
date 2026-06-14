@@ -176,6 +176,34 @@ class RoutePlan(BaseModel):
     evidence: list[Evidence] = Field(default_factory=list)
 
 
+class ContentResearchQuery(BaseModel):
+    query: str
+    origin: str | None = None
+    destination_names: list[str] = Field(default_factory=list)
+    themes: list[str] = Field(default_factory=list)
+    limit: int = Field(default=10, ge=1, le=50)
+
+
+class ContentMention(BaseModel):
+    destination_name: str
+    source_name: str
+    source_type: SourceType = SourceType.INSPIRATION
+    access_method: AccessMethod
+    title: str
+    url_or_reference: str
+    summary: str
+    themes: list[str] = Field(default_factory=list)
+    itinerary_patterns: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+    confidence: float = Field(ge=0, le=1)
+
+
+class ContentResearchResult(BaseModel):
+    query: ContentResearchQuery
+    mentions: list[ContentMention]
+    evidence: list[Evidence] = Field(default_factory=list)
+
+
 class HardFilterResult(BaseModel):
     passed: bool
     reasons: list[str] = Field(default_factory=list)

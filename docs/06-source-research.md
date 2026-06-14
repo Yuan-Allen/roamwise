@@ -271,6 +271,12 @@ Output:
 - Common warnings.
 - Source confidence labels.
 
+Implementation note:
+
+- Start by fixing the adapter output contract with local seed data.
+- Replace the local seed adapter with an approved live source path.
+- Candidate mentions from social/guide sources are agent inputs, not automatic final recommendations.
+
 ## Source References
 
 - [QWeather developer docs](https://dev.qweather.com/docs/)

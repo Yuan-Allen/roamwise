@@ -9,10 +9,18 @@ import typer
 from pydantic import TypeAdapter
 from rich.console import Console
 
+from roamwise.adapters.content import LocalContentSeedAdapter
 from roamwise.adapters.maps import AmapClient, AmapError, MissingAmapApiKeyError
 from roamwise.adapters.weather import OpenMeteoWeatherClient
 from roamwise.core.candidates import ensure_candidates
-from roamwise.core.models import GeoPoint, RecommendationResult, RouteMode, RoutePlan, TravelRequest
+from roamwise.core.models import (
+    ContentResearchQuery,
+    GeoPoint,
+    RecommendationResult,
+    RouteMode,
+    RoutePlan,
+    TravelRequest,
+)
 from roamwise.core.ranking import score_destination_options, score_weather_forecasts
 from roamwise.core.reports import (
     destination_recommendation_to_markdown,
@@ -22,8 +30,10 @@ from roamwise.core.reports import (
 app = typer.Typer(help="Roamwise travel research commands.")
 recommend_app = typer.Typer(help="Generate recommendation reports.")
 amap_app = typer.Typer(help="Inspect Amap Web Service API access.")
+content_app = typer.Typer(help="Research social and guide inspiration sources.")
 app.add_typer(recommend_app, name="recommend")
 app.add_typer(amap_app, name="amap")
+app.add_typer(content_app, name="content")
 console = Console()
 
 
@@ -187,6 +197,38 @@ def _load_request(path: Path) -> TravelRequest:
     return TypeAdapter(TravelRequest).validate_python(payload)
 
 
+@content_app.command("seed")
+def content_seed(
+    request_path: Annotated[
+        Path,
+        typer.Argument(
+            exists=True,
+            file_okay=True,
+            dir_okay=False,
+            readable=True,
+            help="Path to a TravelRequest JSON file.",
+        ),
+    ],
+    limit: Annotated[int, typer.Option("--limit", "-n", min=1, max=50)] = 10,
+) -> None:
+    """Return local structured inspiration mentions for a request.
+
+    This is a scaffold command. It fixes the output contract that future
+    Xiaohongshu, Zhihu, Trip.com, search, MCP, or OpenCLI adapters should match.
+    """
+
+    request = ensure_candidates(_load_request(request_path), limit=limit)
+    query = ContentResearchQuery(
+        query=_content_query_text(request),
+        origin=request.origin,
+        destination_names=[candidate.name for candidate in request.candidates],
+        themes=_request_themes(request),
+        limit=limit,
+    )
+    result = asyncio.run(LocalContentSeedAdapter().research(query))
+    console.print(result.model_dump_json(indent=2))
+
+
 @amap_app.command("geocode")
 def amap_geocode(
     address: Annotated[str, typer.Argument(help="Address or place name to geocode.")],
@@ -229,3 +271,17 @@ def _parse_cli_point(raw: str) -> GeoPoint:
         return GeoPoint(longitude=float(longitude_text), latitude=float(latitude_text))
     except ValueError as exc:
         raise typer.BadParameter("coordinate must be formatted as longitude,latitude") from exc
+
+
+def _content_query_text(request: TravelRequest) -> str:
+    parts = [request.origin, request.notes or "", request.ranking_profile.name]
+    return " ".join(part for part in parts if part).strip()
+
+
+def _request_themes(request: TravelRequest) -> list[str]:
+    themes: list[str] = []
+    for candidate in request.candidates:
+        for theme in candidate.themes:
+            if theme not in themes:
+                themes.append(theme)
+    return themes
