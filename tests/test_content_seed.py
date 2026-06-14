@@ -16,6 +16,8 @@ async def test_local_content_seed_returns_structured_mentions() -> None:
     )
 
     assert result.mentions
+    assert result.mentions[0].evidence_role == "inspiration"
+    assert result.mentions[0].source_freshness == "unknown"
     assert result.evidence[0].needs_corroboration is True
     assert "杭州" in candidate_names_from_mentions(result)
 

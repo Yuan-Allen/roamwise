@@ -21,9 +21,11 @@ class LocalContentSeedAdapter:
     """
 
     async def research(self, query: ContentResearchQuery) -> ContentResearchResult:
-        mentions = [mention for mention in _LOCAL_MENTIONS if _matches_query(mention, query)][
-            : query.limit
-        ]
+        mentions = [
+            _normalize_local_seed_mention(mention)
+            for mention in _LOCAL_MENTIONS
+            if _matches_query(mention, query)
+        ][: query.limit]
         collected_at = datetime.now(UTC)
         evidence = Evidence(
             source_name="LocalContentSeed",
@@ -59,6 +61,20 @@ def _matches_query(mention: ContentMention, query: ContentResearchQuery) -> bool
     theme_tokens = [theme.lower() for theme in query.themes]
     tokens = query_tokens + theme_tokens
     return not tokens or any(token in haystack for token in tokens)
+
+
+def _normalize_local_seed_mention(mention: ContentMention) -> ContentMention:
+    return mention.model_copy(
+        update={
+            "platform_hint": "local_seed",
+            "verification_needed": [
+                "Replace or corroborate this local seed with live sources before relying on it."
+            ],
+            "risk_notes": [
+                "Local seed data is a bootstrap example, not a production content source."
+            ],
+        }
+    )
 
 
 _LOCAL_MENTIONS = [

@@ -32,6 +32,8 @@ Content sources should produce inspiration evidence unless they are official or 
 Useful fields:
 
 - platform.
+- platform hint.
+- evidence role: `inspiration`, `factual_candidate`, or `verification_needed`.
 - query.
 - destination.
 - title.
@@ -39,11 +41,15 @@ Useful fields:
 - author or publisher when visible.
 - published date when visible.
 - collected at.
+- source freshness.
 - themes.
 - mentioned POIs.
 - mentioned foods.
 - itinerary pattern.
 - warnings or pitfalls.
+- candidate expansion.
+- verification needed.
+- risk notes.
 - confidence.
 - why it matters for the current request.
 

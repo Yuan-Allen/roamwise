@@ -9,10 +9,12 @@ from tenacity import retry, retry_if_exception_type, stop_after_attempt, wait_ex
 from roamwise.core.models import (
     AccessMethod,
     ContentAccessPolicy,
+    ContentEvidenceRole,
     ContentMention,
     ContentResearchQuery,
     ContentResearchResult,
     Evidence,
+    SourceFreshness,
     SourceType,
 )
 from roamwise.core.settings import Settings
@@ -119,18 +121,30 @@ def _mentions_from_tavily(
         destination = _infer_destination(query.destination_names, f"{title} {content}")
         if destination is None:
             destination = query.destination_names[0] if query.destination_names else "unknown"
+        platform_hint = _infer_platform_hint(url, f"{title} {content}")
+        source_type = _source_type_for_platform(platform_hint)
+        evidence_role = _evidence_role_for_platform(platform_hint)
+        verification_needed = _verification_needed_for_platform(platform_hint)
+        risk_notes = _risk_notes_for_platform(platform_hint)
         mentions.append(
             ContentMention(
                 destination_name=destination,
-                source_name="Tavily",
+                source_name=_source_name_for_platform(platform_hint),
+                source_type=source_type,
                 access_method=AccessMethod.SEARCH,
+                platform_hint=platform_hint,
+                evidence_role=evidence_role,
                 title=title,
                 url_or_reference=url,
                 summary=content[:500],
                 themes=[theme for theme in query.themes if theme in f"{title} {content}"],
+                candidate_expansion=_candidate_expansion(query.destination_names, destination),
+                verification_needed=verification_needed,
+                source_freshness=SourceFreshness.UNKNOWN,
+                risk_notes=risk_notes,
                 itinerary_patterns=[],
-                warnings=["Public search result; agent must inspect source before relying on it."],
-                confidence=0.5,
+                warnings=_warnings_for_platform(platform_hint),
+                confidence=_confidence_for_platform(platform_hint),
             )
         )
     return mentions
@@ -141,3 +155,126 @@ def _infer_destination(destination_names: list[str], text: str) -> str | None:
         if name in text:
             return name
     return None
+
+
+def _infer_platform_hint(url: str, text: str) -> str:
+    normalized = f"{url} {text}".lower()
+    if "xiaohongshu.com" in normalized or "xhslink.com" in normalized or "小红书" in text:
+        return "xiaohongshu"
+    if "zhihu.com" in normalized or "知乎" in text:
+        return "zhihu"
+    if "ctrip.com" in normalized or "携程" in text:
+        return "ctrip"
+    if "trip.com" in normalized or "trip.com" in text.lower():
+        return "trip.com"
+    if "mafengwo.cn" in normalized or "马蜂窝" in text:
+        return "mafengwo"
+    if "tripadvisor." in normalized or "tripadvisor" in text.lower():
+        return "tripadvisor"
+    if "reddit.com" in normalized:
+        return "reddit"
+    if _looks_official(normalized):
+        return "official"
+    if "blog" in normalized or "forum" in normalized or "bbs" in normalized:
+        return "blog_or_forum"
+    return "public_web"
+
+
+def _looks_official(normalized: str) -> bool:
+    official_markers = [
+        ".gov",
+        "gov.cn",
+        "gouv.",
+        "go.jp",
+        "tourism",
+        "travel.state.gov",
+        "mfa.gov",
+        "embassy",
+        "museum",
+        "park",
+        "airport",
+        "railway",
+    ]
+    return any(marker in normalized for marker in official_markers)
+
+
+def _source_type_for_platform(platform_hint: str) -> SourceType:
+    if platform_hint == "official":
+        return SourceType.OFFICIAL
+    if platform_hint in {"ctrip", "trip.com", "tripadvisor"}:
+        return SourceType.CONTEXT
+    return SourceType.INSPIRATION
+
+
+def _evidence_role_for_platform(platform_hint: str) -> ContentEvidenceRole:
+    if platform_hint == "official":
+        return ContentEvidenceRole.FACTUAL_CANDIDATE
+    if platform_hint in {"ctrip", "trip.com", "tripadvisor"}:
+        return ContentEvidenceRole.VERIFICATION_NEEDED
+    return ContentEvidenceRole.INSPIRATION
+
+
+def _source_name_for_platform(platform_hint: str) -> str:
+    names = {
+        "xiaohongshu": "Xiaohongshu",
+        "zhihu": "Zhihu",
+        "ctrip": "Ctrip",
+        "trip.com": "Trip.com",
+        "mafengwo": "Mafengwo",
+        "tripadvisor": "Tripadvisor",
+        "reddit": "Reddit",
+        "official": "OfficialSource",
+        "blog_or_forum": "BlogOrForum",
+        "public_web": "PublicWeb",
+    }
+    return names.get(platform_hint, "PublicWeb")
+
+
+def _verification_needed_for_platform(platform_hint: str) -> list[str]:
+    if platform_hint == "official":
+        return ["Inspect the official page and timestamp before relying on operational details."]
+    if platform_hint in {"ctrip", "trip.com"}:
+        return ["Verify live prices, tickets, availability, and booking rules before booking."]
+    if platform_hint == "tripadvisor":
+        return [
+            "Cross-check ratings, opening status, and recent reviews "
+            "against official or map sources."
+        ]
+    if platform_hint in {"xiaohongshu", "zhihu", "mafengwo", "reddit", "blog_or_forum"}:
+        return ["Corroborate operational claims with official, map, weather, or transport sources."]
+    return ["Inspect source page before using this search result as evidence."]
+
+
+def _risk_notes_for_platform(platform_hint: str) -> list[str]:
+    if platform_hint in {"xiaohongshu", "zhihu", "mafengwo", "reddit", "blog_or_forum"}:
+        return [
+            "Social or guide content is inspiration and may be subjective, stale, or incomplete."
+        ]
+    if platform_hint in {"ctrip", "trip.com"}:
+        return [
+            "Travel-commerce content can include availability or price hints that change quickly."
+        ]
+    if platform_hint == "official":
+        return ["Search snippets can omit context; inspect the official page directly."]
+    return ["Public search rank does not imply recommendation quality."]
+
+
+def _warnings_for_platform(platform_hint: str) -> list[str]:
+    return [
+        "Public search result; agent must inspect source before relying on it.",
+        *_verification_needed_for_platform(platform_hint),
+    ]
+
+
+def _confidence_for_platform(platform_hint: str) -> float:
+    if platform_hint == "official":
+        return 0.65
+    if platform_hint in {"ctrip", "trip.com", "tripadvisor"}:
+        return 0.55
+    return 0.45
+
+
+def _candidate_expansion(destination_names: list[str], destination: str) -> list[str]:
+    if destination == "unknown" or destination in destination_names:
+        return []
+    return [destination]

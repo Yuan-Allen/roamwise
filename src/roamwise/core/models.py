@@ -23,6 +23,19 @@ class SourceType(StrEnum):
     OFFICIAL = "official"
 
 
+class ContentEvidenceRole(StrEnum):
+    INSPIRATION = "inspiration"
+    FACTUAL_CANDIDATE = "factual_candidate"
+    VERIFICATION_NEEDED = "verification_needed"
+
+
+class SourceFreshness(StrEnum):
+    CURRENT = "current"
+    RECENT = "recent"
+    STALE = "stale"
+    UNKNOWN = "unknown"
+
+
 class DateRange(BaseModel):
     start: date
     end: date
@@ -200,10 +213,16 @@ class ContentMention(BaseModel):
     source_name: str
     source_type: SourceType = SourceType.INSPIRATION
     access_method: AccessMethod
+    platform_hint: str = "unknown"
+    evidence_role: ContentEvidenceRole = ContentEvidenceRole.INSPIRATION
     title: str
     url_or_reference: str
     summary: str
     themes: list[str] = Field(default_factory=list)
+    candidate_expansion: list[str] = Field(default_factory=list)
+    verification_needed: list[str] = Field(default_factory=list)
+    source_freshness: SourceFreshness = SourceFreshness.UNKNOWN
+    risk_notes: list[str] = Field(default_factory=list)
     itinerary_patterns: list[str] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
     confidence: float = Field(ge=0, le=1)
