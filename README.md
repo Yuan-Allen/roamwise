@@ -120,6 +120,7 @@ These commands are diagnostic entry points for the route-planning spike. The nor
 - [Skill-first usage](docs/09-skill-first-usage.md)
 - [Content source playbooks](docs/10-content-source-playbooks.md)
 - [Agent runbooks](docs/11-agent-runbooks.md)
+- [Runbook examples](docs/12-runbook-examples.md)
 - [Bootstrap ADR](docs/adr/0001-docs-first-bootstrap.md)
 
 ## Next Decision

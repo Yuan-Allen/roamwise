@@ -50,6 +50,7 @@ After live research narrows or expands candidates, use scripts to verify weather
 - Use the detailed destination advisor as `post_selection_runbook` after the user selects a destination.
 - If multiple runbooks apply, verify hard filters first, then use inspiration sources to improve fit among feasible candidates.
 - Include the selected runbook stack in the recommendation report.
+- Use `docs/12-runbook-examples.md` as execution references for complex or ambiguous requests.
 
 ## Workflow
 
